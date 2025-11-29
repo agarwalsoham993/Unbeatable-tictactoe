@@ -241,11 +241,12 @@
             return available[0];
         }
 
-        // --- Standard Min-Max Algorithm ---
+        // --- New Min-Max Algorithm ---
 
         function minimax(currentBoard, depth, isMaximizing) {
             const result = checkGameStatus(currentBoard).status;
             
+            // Terminal states
             if (result === BOT) return 10 - depth; // Bot wins
             if (result === PLAYER) return depth - 10; // Player wins
             if (result === 3) return 0; // Draw
@@ -279,6 +280,8 @@
             let bestScore = -Infinity;
             let move = -1;
             
+            // If it's the very first move of the game, pick center or corner to save computation
+            // (Minimax is fast enough for 3x3, but this is a common optimization)
             const emptyCount = currentBoard.filter(c => c === EMPTY).length;
             if (emptyCount === 9) return 4; // Center
 
@@ -296,6 +299,8 @@
             }
             return move;
         }
+
+        // --- UI and Game Flow ---
 
         function createBoard() {
             boardElement.innerHTML = ''; // Clear existing
@@ -342,14 +347,15 @@
                     statusElement.textContent = "Your Turn (X)";
                     boardElement.classList.remove('disabled');
                 }
-            }, 300);
+            }, 300); // Slight delay for UX
         }
 
         function resetGame() {
             board.fill(EMPTY);
             
             playerStartsNext = !playerStartsNext;
-            if (!playerStartsNext) { 
+            if (!playerStartsNext) { // Bot starts
+                // Bot move based on selected algorithm
                 let firstMove;
                 if (useMinMax) {
                      firstMove = findBotMoveMinMax(board);
@@ -358,7 +364,7 @@
                 }
                 board[firstMove] = BOT;
                 statusElement.textContent = "Your Turn (X)";
-            } else {
+            } else { // Player starts
                  statusElement.textContent = "Your Turn (X)";
             }
             
@@ -375,6 +381,8 @@
                 modeDisplay.textContent = "Current Algorithm: Original Ported Logic";
                 minMaxButton.textContent = "Compare with Min-Max";
             }
+            // Optional: Auto-reset game on switch to ensure fair start?
+            // User can just press New Game manually.
         }
 
         function updateUI() {
@@ -428,12 +436,13 @@
             updateScore();
         }
         
+        // --- Initialization ---
         resetButton.addEventListener('click', resetGame);
         minMaxButton.addEventListener('click', toggleAlgorithm);
         
         createBoard();
         loadScore();
-        resetGame(); 
+        resetGame(); // Start the first game
     </script>
 </body>
 </html>
