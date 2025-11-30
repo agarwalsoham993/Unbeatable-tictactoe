@@ -347,15 +347,14 @@
                     statusElement.textContent = "Your Turn (X)";
                     boardElement.classList.remove('disabled');
                 }
-            }, 300); // Slight delay for UX
+            }, 300);
         }
 
         function resetGame() {
             board.fill(EMPTY);
             
             playerStartsNext = !playerStartsNext;
-            if (!playerStartsNext) { // Bot starts
-                // Bot move based on selected algorithm
+            if (!playerStartsNext) {
                 let firstMove;
                 if (useMinMax) {
                      firstMove = findBotMoveMinMax(board);
@@ -381,8 +380,8 @@
                 modeDisplay.textContent = "Current Algorithm: Original Ported Logic";
                 minMaxButton.textContent = "Compare with Min-Max";
             }
-            // Optional: Auto-reset game on switch to ensure fair start?
-            // User can just press New Game manually.
+
+            
         }
 
         function updateUI() {
@@ -436,13 +435,12 @@
             updateScore();
         }
         
-        // --- Initialization ---
         resetButton.addEventListener('click', resetGame);
         minMaxButton.addEventListener('click', toggleAlgorithm);
         
         createBoard();
         loadScore();
-        resetGame(); // Start the first game
+        resetGame();
     </script>
 </body>
 </html>
